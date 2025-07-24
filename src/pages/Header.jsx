@@ -3,7 +3,6 @@ import React from 'react';
 const Header = () => {
   return (
     <header>
-      {/* Top half with search bar and logos */}
       <div style={{
         display: 'flex',
         padding: '2px 16px',
@@ -14,7 +13,6 @@ const Header = () => {
         boxShadow: '0.833px 0px 0px 0px #F4F4F4 inset'
       }}>
         
-        {/* Search bar */}
         <div style={{
           display: 'flex',
           width: '357px',
@@ -28,7 +26,6 @@ const Header = () => {
           <input type="text" placeholder="Search or type" style={{border: 'none', outline: 'none', background: 'transparent'}} />
         </div>
 
-        {/* Right side icons */}
         <div style={{display: 'flex', alignItems: 'center', gap: '24px', marginLeft: 'auto'}}>
           <svg width="15" height="20" viewBox="0 0 15 20" fill="none">
             <path d="M7.5 0C3.35357 0 0 3.13 0 7C0 12.25 7.5 20 7.5 20C7.5 20 15 12.25 15 7C15 3.13 11.6464 0 7.5 0ZM2.14286 7C2.14286 4.24 4.54286 2 7.5 2C10.4571 2 12.8571 4.24 12.8571 7C12.8571 9.88 9.77143 14.19 7.5 16.88C5.27143 14.21 2.14286 9.85 2.14286 7Z" fill="#525966"/>
@@ -51,7 +48,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Bottom half with path and netzero logo */}
       <div style={{
         display: 'flex',
         padding: '2px 0px 2px 24px',
@@ -60,7 +56,6 @@ const Header = () => {
         alignSelf: 'stretch'
       }}>
         
-        {/* Path */}
         <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="#7B809A"/>
@@ -75,7 +70,6 @@ const Header = () => {
           <span style={{color: '#7B809A'}}>Medical management</span>
         </div>
 
-        {/* Netzero logo */}
         <div style={{
           background: '#0EA5E9',
           color: 'white',

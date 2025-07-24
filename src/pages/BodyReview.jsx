@@ -48,7 +48,6 @@ export default function BodyReview() {
         Review
       </h1>
 
-      {/* Tabs */}
       <div style={{
         display: "flex",
         justifyContent: "center",
@@ -75,7 +74,6 @@ export default function BodyReview() {
         ))}
       </div>
 
-      {/* Main content */}
       <div style={{ 
         display: "flex", 
         gap: "20px", 
@@ -84,7 +82,6 @@ export default function BodyReview() {
         padding: "0 12px 12px 12px",
         overflow: "hidden"
       }}>
-        {/* Static image and buttons */}
         <div style={{
           width: "300px",
           display: "flex",
@@ -136,7 +133,6 @@ export default function BodyReview() {
           </div>
         </div>
 
-        {/* Changing content */}
         <div style={{ 
           display: "flex", 
           gap: "16px", 

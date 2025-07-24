@@ -3,7 +3,6 @@ import React from 'react';
 const Neurological = () => {
   return (
     <div style={{ padding: '20px', maxWidth: '900px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      {/* Neurological Assessment Section */}
       <div style={{
         display: 'flex',
         padding: '12px',
@@ -136,7 +135,6 @@ const Neurological = () => {
         </div>
       </div>
 
-      {/* Neurological Disturbances Section */}
       <div style={{
         display: 'flex',
         padding: '12px',

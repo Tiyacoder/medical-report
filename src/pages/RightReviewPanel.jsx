@@ -9,7 +9,6 @@ const RightReviewPanel = () => {
       border: '1px solid #B7C8E580',
       borderRadius: '6px'
     }}>
-      {/* Special Remarks Section with Border */}
       <div style={{
         border: '1px solid #B7C8E580',
         borderRadius: '6px',
@@ -27,7 +26,6 @@ const RightReviewPanel = () => {
           Special Remarks
         </h2>
 
-        {/* Re-Examination Requirement */}
         <div style={{ marginBottom: '12px' }}>
           <div style={{
             color: '#7A8699',
@@ -48,7 +46,6 @@ const RightReviewPanel = () => {
           </div>
         </div>
 
-        {/* Physician Specialist Opinion Required */}
         <div style={{ marginBottom: '12px' }}>
           <div style={{
             color: '#7A8699',
@@ -69,7 +66,6 @@ const RightReviewPanel = () => {
           </div>
         </div>
 
-        {/* Permitted for Duties */}
         <div style={{ marginBottom: '20px' }}>
           <div style={{
             color: '#7A8699',
@@ -90,7 +86,6 @@ const RightReviewPanel = () => {
           </div>
         </div>
 
-        {/* Is Suffering From */}
         <div style={{
           borderRadius: '6px',
           background: 'rgba(9, 162, 227, 0.10)',
@@ -119,7 +114,6 @@ const RightReviewPanel = () => {
           </div>
         </div>
 
-        {/* Repeat Examination After */}
         <div style={{
           borderRadius: '6px',
           background: '#09A2E3',
@@ -144,7 +138,6 @@ const RightReviewPanel = () => {
         </div>
       </div>
 
-      {/* Other Details */}
       <div style={{
         display: 'flex',
         padding: '12px',

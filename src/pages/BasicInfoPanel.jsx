@@ -94,7 +94,6 @@ const BasicInfoPanel = () => {
         </div>
       </div>
 
-      {/* Pathological */}
       <div style={{ ...sectionStyle, alignSelf: 'stretch' }}>
         <div style={{ width: '100%' }}>
           <div style={titleStyle}>Pathological</div>
@@ -113,12 +112,10 @@ const BasicInfoPanel = () => {
         </div>
       </div>
 
-      {/* Physical Characteristics */}
       <div style={{ ...sectionStyle, alignSelf: 'stretch' }}>
         <div style={{ width: '100%' }}>
           <div style={titleStyle}>Physical Characteristics</div>
           <div style={{ display: 'flex', gap: '16px' }}>
-            {/* Identification Mark */}
             <div style={{
               flex: '1',
               alignSelf: 'stretch',
@@ -147,7 +144,6 @@ const BasicInfoPanel = () => {
               </div>
             </div>
 
-            {/* General Development */}
             <div style={{
               flex: '1',
               alignSelf: 'stretch',
