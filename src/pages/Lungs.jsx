@@ -3,14 +3,14 @@ import React from 'react';
 const Lungs = () => {
   const containerStyle = {
     display: 'flex',
-    gap: '20px',
+    gap: '35px',
     padding: '20px',
     fontFamily: 'Roboto, Arial, sans-serif',
     backgroundColor: '#f5f5f5'
   };
 
   const leftColumnStyle = {
-    flex: 1,
+    flex: 1.6,
     display: 'flex',
     flexDirection: 'column',
     gap: '15px'
@@ -69,7 +69,7 @@ const Lungs = () => {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    gap: '80px',
+    gap: '120px',
     marginBottom: '8px'
   };
 

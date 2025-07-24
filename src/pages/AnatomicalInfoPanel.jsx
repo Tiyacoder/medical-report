@@ -30,10 +30,11 @@ export default function AnatomicalInfoPanel() {
             style={{
               display: "flex",
               height: "30px",
-              padding: "8px 12px",
+              padding: "8px 18px",
               justifyContent: "center",
               alignItems: "center",
               gap: "10px",
+              flex: "1",
               backgroundColor: selectedTab === tab ? "#ffffff" : "transparent",
               color: selectedTab === tab ? "#333" : "#666",
               border: "none",
@@ -42,7 +43,8 @@ export default function AnatomicalInfoPanel() {
               fontSize: "14px",
               fontWeight: selectedTab === tab ? "500" : "400",
               boxShadow: selectedTab === tab ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
-              transition: "all 0.2s ease"
+              transition: "all 0.2s ease",
+              whiteSpace: "nowrap"
             }}
             onMouseEnter={(e) => {
               if (selectedTab !== tab) {
