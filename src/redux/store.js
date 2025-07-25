@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import medicalInfoReducer from './medicalInfoSlice'; // adjust path if needed
+import medicalInfoReducer from './medicalInfoSlice'; 
 
 const store = configureStore({
   reducer: {

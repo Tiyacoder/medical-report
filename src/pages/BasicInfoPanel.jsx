@@ -1,4 +1,3 @@
-// src/pages/BasicInfoPanel.jsx
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Modal from '../components/Modal';
@@ -63,7 +62,6 @@ const BasicInfoPanel = () => {
     <>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px' }}>
         <div style={{ display: 'flex', gap: '16px' }}>
-          {/* Basic Info Section */}
           <div
             style={{ ...sectionStyle, flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}
             onClick={() => setActiveModal('basic')}
@@ -85,7 +83,6 @@ const BasicInfoPanel = () => {
             </div>
           </div>
 
-          {/* Urinalysis Section */}
           <div
             style={{ ...sectionStyle, flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}
             onClick={() => setActiveModal('urinalysis')}
@@ -113,7 +110,6 @@ const BasicInfoPanel = () => {
           </div>
         </div>
 
-        {/* Pathological Section */}
         <div style={sectionStyle} onClick={() => setActiveModal('pathological')}>
           <div style={{ width: '100%' }}>
             <div style={titleStyle}>Pathological</div>
@@ -132,7 +128,6 @@ const BasicInfoPanel = () => {
           </div>
         </div>
 
-        {/* Physical Characteristics */}
         <div style={sectionStyle}>
           <div style={{ width: '100%' }}>
             <div style={titleStyle}>Physical Characteristics</div>

@@ -15,7 +15,7 @@ const BasicInfoForm = ({ onClose }) => {
 
   const handleSave = () => {
     dispatch(setBasicInfo(formData));
-    if (onClose) onClose(); // Close the modal after saving
+    if (onClose) onClose(); 
   };
 
   const inputStyle = {
