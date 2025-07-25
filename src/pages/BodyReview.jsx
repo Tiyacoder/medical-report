@@ -6,6 +6,7 @@ import AnatomicalInfoPanel from "./AnatomicalInfoPanel";
 
 export default function BodyReview() {
   const [activeTab, setActiveTab] = useState("Body Condition");
+  const [isFit, setIsFit] = useState(true);
 
   const tabs = [
     { id: "Basic Information", label: "Basic Information", completed: true },
@@ -98,7 +99,7 @@ export default function BodyReview() {
             marginBottom: "8px"
           }}>
             <img 
-              src="/images/body.png" 
+              src={isFit ? "/images/body.png" : "/images/bodyimage.png"}
               alt="Body" 
               style={{ 
                 width: "100%", 
@@ -107,27 +108,42 @@ export default function BodyReview() {
               }} 
             />
           </div>
-          <div style={{ display: "flex", gap: "8px" }}>
-            <button style={{
-              flex: 1,
-              background: "#009EFF",
-              color: "white",
-              padding: "8px 12px",
-              border: "none",
-              borderRadius: "4px",
-              fontSize: "13px"
-            }}>
+          <div style={{ 
+            display: "flex", 
+            gap: "8px",
+            border: "2px solid #009EFF",
+            borderRadius: "6px",
+            padding: "4px",
+            marginTop: "-12px"
+          }}>
+            <button 
+              onClick={() => setIsFit(true)}
+              style={{
+                flex: 1,
+                background: isFit ? "#009EFF" : "white",
+                color: isFit ? "white" : "#666",
+                padding: "8px 12px",
+                border: isFit ? "none" : "1px solid #ddd",
+                borderRadius: "4px",
+                fontSize: "13px",
+                cursor: "pointer"
+              }}
+            >
               Fit
             </button>
-            <button style={{
-              flex: 1,
-              background: "white",
-              color: "#666",
-              padding: "8px 12px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              fontSize: "13px"
-            }}>
+            <button 
+              onClick={() => setIsFit(false)}
+              style={{
+                flex: 1,
+                background: !isFit ? "#009EFF" : "white",
+                color: !isFit ? "white" : "#666",
+                padding: "8px 12px",
+                border: !isFit ? "none" : "1px solid #ddd",
+                borderRadius: "4px",
+                fontSize: "13px",
+                cursor: "pointer"
+              }}
+            >
               Unfit
             </button>
           </div>

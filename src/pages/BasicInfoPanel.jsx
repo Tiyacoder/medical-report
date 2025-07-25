@@ -1,6 +1,18 @@
-import React from 'react';
+// src/pages/BasicInfoPanel.jsx
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import Modal from '../components/Modal';
+import BasicInfoForm from '../forms/BasicInfoForm';
+import PathologicalForm from '../forms/PathologicalForm';
+import UrinalysisForm from '../forms/UrinalysisForm';
 
 const BasicInfoPanel = () => {
+  const [activeModal, setActiveModal] = useState(null);
+
+  const basicInfo = useSelector((state) => state.medicalInfo.basicInfo);
+  const urinalysis = useSelector((state) => state.medicalInfo.urinalysis);
+  const pathological = useSelector((state) => state.medicalInfo.pathologicalInvestigations);
+
   const sectionStyle = {
     display: 'flex',
     padding: '16px',
@@ -10,7 +22,8 @@ const BasicInfoPanel = () => {
     flexWrap: 'wrap',
     borderRadius: '6px',
     border: '1px solid rgba(183, 200, 229, 0.50)',
-    background: '#FFF'
+    background: '#FFF',
+    cursor: 'pointer'
   };
 
   const titleStyle = {
@@ -42,51 +55,135 @@ const BasicInfoPanel = () => {
   const dataItem = (label, value) => (
     <div style={{ minWidth: '120px' }}>
       <div style={labelStyle}>{label}</div>
-      <div style={valueStyle}>{value}</div>
+      <div style={valueStyle}>{value || '--'}</div>
     </div>
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px' }}>
-      {/* Top Row */}
-      <div style={{ display: 'flex', gap: '16px' }}>
-        {/* Basic Information */}
-        <div style={{ ...sectionStyle, flex: '1 0 0', paddingTop: '12px', paddingBottom: '12px', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <div style={titleStyle}>Basic Information</div>
-          <div style={{ width: '100%' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-              <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
-                {dataItem('Weight', '85 kg')}
-                {dataItem('Height', '176 Cm')}
-                {dataItem('Glucose Level', '230/ml')}
+    <>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px' }}>
+        <div style={{ display: 'flex', gap: '16px' }}>
+          {/* Basic Info Section */}
+          <div
+            style={{ ...sectionStyle, flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}
+            onClick={() => setActiveModal('basic')}
+          >
+            <div style={titleStyle}>Basic Information</div>
+            <div style={{ width: '100%' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+                <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
+                  {dataItem('Weight', basicInfo.weight)}
+                  {dataItem('Height', basicInfo.height)}
+                  {dataItem('Glucose Level', basicInfo.glucoseLevel)}
+                </div>
+                <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
+                  {dataItem('Blood Pressure', `${basicInfo.bpSystolic}/${basicInfo.bpDiastolic}`)}
+                  {dataItem('Heartbeat', basicInfo.heartbeat)}
+                  {dataItem('Blood Count', `${basicInfo.bloodTo}-${basicInfo.bloodDo}`)}
+                </div>
               </div>
-              <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
-                {dataItem('Blood Pressure', '120/80')}
-                {dataItem('Heartbeat', '83bpm')}
-                {dataItem('Blood Count', '80-90')}
+            </div>
+          </div>
+
+          {/* Urinalysis Section */}
+          <div
+            style={{ ...sectionStyle, flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}
+            onClick={() => setActiveModal('urinalysis')}
+          >
+            <div style={titleStyle}>Urinalysis</div>
+            <div style={{ width: '100%' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+                {dataItem('Albumin', urinalysis.albumin)}
+                {dataItem('Sugar', urinalysis.sugar)}
+                <div style={{ width: '100%' }}>
+                  <div style={labelStyle}>Reaction</div>
+                  <div style={{
+                    ...valueStyle,
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 1,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
+                    {urinalysis.reaction || '--'}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Urinalysis */}
-        <div style={{ ...sectionStyle, flex: '1 0 0', paddingTop: '12px', paddingBottom: '12px', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <div style={titleStyle}>Urinalysis</div>
+        {/* Pathological Section */}
+        <div style={sectionStyle} onClick={() => setActiveModal('pathological')}>
           <div style={{ width: '100%' }}>
+            <div style={titleStyle}>Pathological</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-              {dataItem('Albumin', '45 mg')}
-              {dataItem('Sugar', '120')}
-              <div style={{ width: '100%' }}>
-                <div style={labelStyle}>Reaction</div>
+              {dataItem('Blood (Hb)', pathological.hb)}
+              {dataItem('Blood (ESR)', pathological.esr)}
+              {dataItem('Blood (Platelets)', pathological.platelets)}
+              {dataItem('Blood Sugar PP', pathological.sugarPP)}
+              {dataItem('Blood Sugar Fasting', pathological.sugarFasting)}
+              {dataItem('Lupid Profile', pathological.lupidProfile)}
+              {dataItem('Blood Urea', pathological.bloodUrea)}
+              {dataItem('Creatinine / LFT', pathological.creatinineLFT)}
+              {dataItem('Urine Routine', pathological.urineRoutine)}
+              {dataItem('Stool Routine', pathological.stoolRoutine)}
+            </div>
+          </div>
+        </div>
+
+        {/* Physical Characteristics */}
+        <div style={sectionStyle}>
+          <div style={{ width: '100%' }}>
+            <div style={titleStyle}>Physical Characteristics</div>
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <div style={{
+                flex: 1,
+                borderRadius: '6px',
+                background: '#E8F4FB',
+                padding: '20px'
+              }}>
                 <div style={{
-                  ...valueStyle,
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: 1,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
+                  color: '#1E1E1E',
+                  fontFamily: 'Roboto',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  marginBottom: '12px'
                 }}>
-                  Lorem ipsum dolor sit amet amet amet amet met amet consectetur...
+                  Identification Mark
+                </div>
+                <div style={{
+                  color: '#818181',
+                  fontFamily: 'Roboto',
+                  fontSize: '12px',
+                  fontWeight: '400'
+                }}>
+                  {basicInfo.identificationMark || '--'}
+                </div>
+              </div>
+
+              <div style={{
+                flex: 1,
+                borderRadius: '6px',
+                background: '#09A2E3',
+                padding: '20px'
+              }}>
+                <div style={{
+                  color: '#FFF',
+                  fontFamily: 'Roboto',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  marginBottom: '12px'
+                }}>
+                  General Development
+                </div>
+                <div style={{
+                  color: '#FFF',
+                  fontFamily: 'Roboto',
+                  fontSize: '12px',
+                  fontWeight: '400'
+                }}>
+                  {basicInfo.generalDevelopment || '--'}
                 </div>
               </div>
             </div>
@@ -94,87 +191,19 @@ const BasicInfoPanel = () => {
         </div>
       </div>
 
-      <div style={{ ...sectionStyle, alignSelf: 'stretch' }}>
-        <div style={{ width: '100%' }}>
-          <div style={titleStyle}>Pathological</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-            {dataItem('Blood (Hb)', '85')}
-            {dataItem('Blood (ESR)', '85')}
-            {dataItem('Blood (Platelets)', '85')}
-            {dataItem('Blood Sugar PP', '120/80')}
-            {dataItem('Blood Sugar Fasting', '85')}
-            {dataItem('Lupid Profile', '80')}
-            {dataItem('Blood Urea', '90')}
-            {dataItem('Creatinine / LFT', '80-90')}
-            {dataItem('Urine Routine', '15')}
-            {dataItem('Stool Routine', '5')}
-          </div>
-        </div>
-      </div>
+      {/* Modals */}
+      <Modal isOpen={activeModal === 'basic'} onClose={() => setActiveModal(null)}>
+        <BasicInfoForm onClose={() => setActiveModal(null)} />
+      </Modal>
 
-      <div style={{ ...sectionStyle, alignSelf: 'stretch' }}>
-        <div style={{ width: '100%' }}>
-          <div style={titleStyle}>Physical Characteristics</div>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <div style={{
-              flex: '1',
-              alignSelf: 'stretch',
-              borderRadius: '6px',
-              background: '#E8F4FB',
-              padding: '20px'
-            }}>
-              <div style={{
-                color: '#1E1E1E',
-                fontFamily: 'Roboto',
-                fontSize: '14px',
-                fontWeight: '600',
-                lineHeight: 'normal',
-                marginBottom: '12px'
-              }}>
-                Identification Mark
-              </div>
-              <div style={{
-                color: '#818181',
-                fontFamily: 'Roboto',
-                fontSize: '12px',
-                fontWeight: '400',
-                lineHeight: '1.4'
-              }}>
-                Lorem ipsum dolor sit amet amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.
-              </div>
-            </div>
+      <Modal isOpen={activeModal === 'urinalysis'} onClose={() => setActiveModal(null)}>
+        <UrinalysisForm onClose={() => setActiveModal(null)} />
+      </Modal>
 
-            <div style={{
-              flex: '1',
-              alignSelf: 'stretch',
-              borderRadius: '6px',
-              background: '#09A2E3',
-              padding: '20px'
-            }}>
-              <div style={{
-                color: '#FFF',
-                fontFamily: 'Roboto',
-                fontSize: '14px',
-                fontWeight: '600',
-                lineHeight: 'normal',
-                marginBottom: '12px'
-              }}>
-                General Development
-              </div>
-              <div style={{
-                color: '#FFF',
-                fontFamily: 'Roboto',
-                fontSize: '12px',
-                fontWeight: '400',
-                lineHeight: '1.4'
-              }}>
-                Lorem ipsum dolor sit amet amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Modal isOpen={activeModal === 'pathological'} onClose={() => setActiveModal(null)}>
+        <PathologicalForm onClose={() => setActiveModal(null)} />
+      </Modal>
+    </>
   );
 };
 
