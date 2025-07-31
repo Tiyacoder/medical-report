@@ -29,8 +29,7 @@ const PathologicalForm = ({ onClose }) => {
   const containerStyle = {
     backgroundColor: 'white',
     padding: '12px',
-    width: '100%',
-    maxWidth: '800px',
+    maxWidth: '500px',
     margin: '0 auto',
     fontFamily: 'Arial, sans-serif',
     maxHeight: '95vh',

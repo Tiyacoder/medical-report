@@ -7,10 +7,24 @@ import UrinalysisForm from '../forms/UrinalysisForm';
 
 const BasicInfoPanel = () => {
   const [activeModal, setActiveModal] = useState(null);
+  const [modalType, setModalType] = useState('center');
 
   const basicInfo = useSelector((state) => state.medicalInfo.basicInfo);
   const urinalysis = useSelector((state) => state.medicalInfo.urinalysis);
   const pathological = useSelector((state) => state.medicalInfo.pathologicalInvestigations);
+
+  const openModal = (type) => {
+    setActiveModal(type);
+    if (type === 'urinalysis') {
+      setModalType('center');
+    } else {
+      setModalType('sidebar');
+    }
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+  };
 
   const sectionStyle = {
     display: 'flex',
@@ -64,7 +78,7 @@ const BasicInfoPanel = () => {
         <div style={{ display: 'flex', gap: '16px' }}>
           <div
             style={{ ...sectionStyle, flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}
-            onClick={() => setActiveModal('basic')}
+            onClick={() => openModal('basic')}
           >
             <div style={titleStyle}>Basic Information</div>
             <div style={{ width: '100%' }}>
@@ -85,7 +99,7 @@ const BasicInfoPanel = () => {
 
           <div
             style={{ ...sectionStyle, flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}
-            onClick={() => setActiveModal('urinalysis')}
+            onClick={() => openModal('urinalysis')}
           >
             <div style={titleStyle}>Urinalysis</div>
             <div style={{ width: '100%' }}>
@@ -110,7 +124,7 @@ const BasicInfoPanel = () => {
           </div>
         </div>
 
-        <div style={sectionStyle} onClick={() => setActiveModal('pathological')}>
+        <div style={sectionStyle} onClick={() => openModal('pathological')}>
           <div style={{ width: '100%' }}>
             <div style={titleStyle}>Pathological</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
@@ -187,16 +201,14 @@ const BasicInfoPanel = () => {
       </div>
 
       {/* Modals */}
-      <Modal isOpen={activeModal === 'basic'} onClose={() => setActiveModal(null)}>
-        <BasicInfoForm onClose={() => setActiveModal(null)} />
-      </Modal>
-
-      <Modal isOpen={activeModal === 'urinalysis'} onClose={() => setActiveModal(null)}>
-        <UrinalysisForm onClose={() => setActiveModal(null)} />
-      </Modal>
-
-      <Modal isOpen={activeModal === 'pathological'} onClose={() => setActiveModal(null)}>
-        <PathologicalForm onClose={() => setActiveModal(null)} />
+      <Modal
+        isOpen={!!activeModal}
+        onClose={closeModal}
+        type={modalType}
+      >
+        {activeModal === 'basic' && <BasicInfoForm onClose={closeModal} />}
+        {activeModal === 'urinalysis' && <UrinalysisForm onClose={closeModal} />}
+        {activeModal === 'pathological' && <PathologicalForm onClose={closeModal} />}
       </Modal>
     </>
   );

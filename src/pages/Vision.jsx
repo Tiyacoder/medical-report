@@ -1,6 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+// Redux Actions
+const updateVisionData = (section, data) => ({ type: 'UPDATE_VISION_DATA', payload: { section, data } });
 
 const Vision = () => {
+  // State management
+  const [globalState, setGlobalState] = useState({
+    vision: {
+      leftEar: 'Lorem ipsum dolor sit amet amet amet amet met amet consectetur...',
+      rightEar: 'Lorem ipsum dolor sit amet amet amet amet met amet consectetur...',
+      organicDisease: 'Lorem ipsum dolor sit amet amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.',
+      squintPerformed: 'Yes',
+      squintRemarks: 'Lorem ipsum dolor sit amet amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.',
+      distantVisionLeft: '-1D',
+      distantVisionRight: '2.5D',
+      nearVisionLeft: '-1D',
+      nearVisionRight: '2.5D'
+    }
+  });
+
+  const useSelector = (selector) => selector(globalState);
+  const useDispatch = () => (action) => {
+    if (action.type === 'UPDATE_VISION_DATA') {
+      setGlobalState(prev => ({
+        ...prev,
+        vision: { ...prev.vision, ...action.payload.data }
+      }));
+    }
+  };
+
+  const dispatch = useDispatch();
+  const visionData = useSelector(state => state.vision);
+  
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  const openDrawer = () => {
+    setFormData({
+      nightBlindness: '',
+      colorBlindness: '',
+      organicDisease: '',
+      distantVisionLeft: '',
+      distantVisionRight: '',
+      nearVisionLeft: '',
+      nearVisionRight: ''
+    });
+    setDrawerOpen(true);
+  };
+
+  const openModal = () => {
+    setFormData({ 
+      squintPerformed: '',
+      squintRemarks: ''
+    });
+    setModalOpen(true);
+  };
+
+  const handleSaveDrawer = () => {
+    dispatch(updateVisionData('visionCondition', formData));
+    setDrawerOpen(false);
+  };
+
+  const handleSaveModal = () => {
+    dispatch(updateVisionData('squint', formData));
+    setModalOpen(false);
+  };
+
   const styles = {
     container: {
       display: 'flex',
@@ -25,7 +91,8 @@ const Vision = () => {
       backgroundColor: '#fff',
       borderRadius: '8px',
       border: '1px solid #e0e0e0',
-      padding: '18px'
+      padding: '18px',
+      cursor: 'pointer'
     },
     cardTitle: {
       fontSize: '16px',
@@ -80,8 +147,8 @@ const Vision = () => {
       display: 'flex'
     },
     yesBtn: {
-      backgroundColor: '#2196f3',
-      color: 'white',
+      backgroundColor: visionData.squintPerformed === 'Yes' ? '#2196f3' : '#f5f5f5',
+      color: visionData.squintPerformed === 'Yes' ? 'white' : '#333',
       border: '1px solid #ccc',
       padding: '8px 16px',
       borderRadius: '4px 0 0 4px',
@@ -89,8 +156,8 @@ const Vision = () => {
       fontWeight: '600'
     },
     noBtn: {
-      backgroundColor: '#f5f5f5',
-      color: '#333',
+      backgroundColor: visionData.squintPerformed === 'No' ? '#2196f3' : '#f5f5f5',
+      color: visionData.squintPerformed === 'No' ? 'white' : '#333',
       border: '1px solid #ccc',
       padding: '8px 16px',
       borderRadius: '0 4px 4px 0',
@@ -109,7 +176,7 @@ const Vision = () => {
       marginBottom: '20px'
     },
     visionSection: {
-      marginBottom: '16px'
+      marginBottom: '24px'
     },
     visionSectionTitle: {
       fontSize: '14px',
@@ -207,27 +274,27 @@ const Vision = () => {
   return (
     <div style={styles.container}>
       <div style={styles.leftColumn}>
-        <div style={styles.card}>
+        <div style={styles.card} onClick={openDrawer}>
           <h3 style={styles.cardTitle}>Vision Condition</h3>
           <div style={{display: 'flex', gap: '10px'}}>
             <div style={{display: 'flex', flexDirection: 'column', gap: '5px', flex: 1}}>
               <div style={styles.leftEar}>
                 <h4 style={styles.earTitle}>Left Ear</h4>
-                <p style={styles.earText}>Lorem ipsum dolor sit amet amet amet amet met amet consectetur...</p>
+                <p style={styles.earText}>{visionData.leftEar}</p>
               </div>
               <div style={styles.rightEar}>
                 <h4 style={styles.earTitle}>Right Ear</h4>
-                <p style={styles.earText}>Lorem ipsum dolor sit amet amet amet amet met amet consectetur...</p>
+                <p style={styles.earText}>{visionData.rightEar}</p>
               </div>
             </div>
             <div style={{...styles.organicDisease, flex: 1}}>
               <h4 style={styles.earTitle}>Any Organic Disease of Eye</h4>
-              <p style={styles.earText}>Lorem ipsum dolor sit amet amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.</p>
+              <p style={styles.earText}>{visionData.organicDisease}</p>
             </div>
           </div>
         </div>
 
-        <div style={styles.card}>
+        <div style={styles.card} onClick={openModal}>
           <h3 style={styles.cardTitle}>Squint</h3>
           <div style={styles.squintRow}>
             <span style={styles.squintLabel}>Test for Squint Performed</span>
@@ -238,24 +305,24 @@ const Vision = () => {
           </div>
           <div style={styles.remarks}>
             <h4 style={styles.earTitle}>Remarks</h4>
-            <p style={styles.earText}>Lorem ipsum dolor sit amet amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.</p>
+            <p style={styles.earText}>{visionData.squintRemarks}</p>
           </div>
         </div>
       </div>
 
       <div style={styles.rightColumn}>
-        <div style={styles.card}>
+        <div style={styles.card} onClick={openDrawer}>
           <h3 style={styles.cardTitle}>Vision Check</h3>
           <div style={styles.visionSection}>
             <h4 style={styles.visionSectionTitle}>Distant Vision</h4>
             <div style={styles.visionGrid}>
               <div style={styles.eyeData}>
                 <div style={styles.eyeLabel}>Left Eye</div>
-                <div style={styles.eyeValue}>-1D</div>
+                <div style={styles.eyeValue}>{visionData.distantVisionLeft}</div>
               </div>
               <div style={styles.eyeData}>
                 <div style={styles.eyeLabel}>Right Eye</div>
-                <div style={styles.eyeValue}>2.5D</div>
+                <div style={styles.eyeValue}>{visionData.distantVisionRight}</div>
               </div>
             </div>
           </div>
@@ -264,11 +331,11 @@ const Vision = () => {
             <div style={styles.visionGrid}>
               <div style={styles.eyeData}>
                 <div style={styles.eyeLabel}>Left Eye</div>
-                <div style={styles.eyeValue}>-1D</div>
+                <div style={styles.eyeValue}>{visionData.nearVisionLeft}</div>
               </div>
               <div style={styles.eyeData}>
                 <div style={styles.eyeLabel}>Right Eye</div>
-                <div style={styles.eyeValue}>2.5D</div>
+                <div style={styles.eyeValue}>{visionData.nearVisionRight}</div>
               </div>
             </div>
           </div>
@@ -307,6 +374,124 @@ const Vision = () => {
           </div>
         </div>
       </div>
+
+      {/* Drawer for Vision Condition */}
+      {drawerOpen && (
+        <>
+          <div onClick={() => setDrawerOpen(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.3)', zIndex: 999 }} />
+          <div style={{ position: 'fixed', top: 0, right: 0, width: '350px', height: '100vh', background: '#FFF', boxShadow: '-2px 0 10px rgba(0,0,0,0.1)', zIndex: 1000, padding: '16px', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, fontSize: '16px' }}>Vision Condition</h3>
+              <button onClick={() => setDrawerOpen(false)} style={{ background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer' }}>×</button>
+            </div>
+            
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Night Blindness</label>
+                <textarea value={formData.nightBlindness || ''} onChange={(e) => setFormData({...formData, nightBlindness: e.target.value})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '11px', minHeight: '40px', resize: 'vertical', fontFamily: 'Arial', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Color Blindness</label>
+                <textarea value={formData.colorBlindness || ''} onChange={(e) => setFormData({...formData, colorBlindness: e.target.value})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '11px', minHeight: '40px', resize: 'vertical', fontFamily: 'Arial', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Any Organic Disease of Eye</label>
+                <textarea value={formData.organicDisease || ''} onChange={(e) => setFormData({...formData, organicDisease: e.target.value})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '11px', minHeight: '40px', resize: 'vertical', fontFamily: 'Arial', outline: 'none' }} />
+              </div>
+
+              <h4 style={{ color: '#2196f3', margin: '12px 0 6px 0', fontSize: '13px' }}>Distant Vision</h4>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Left Eye</label>
+                  <input value={formData.distantVisionLeft || ''} onChange={(e) => setFormData({...formData, distantVisionLeft: e.target.value})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '11px', fontFamily: 'Arial', outline: 'none' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Right Eye</label>
+                  <input value={formData.distantVisionRight || ''} onChange={(e) => setFormData({...formData, distantVisionRight: e.target.value})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '11px', fontFamily: 'Arial', outline: 'none' }} />
+                </div>
+              </div>
+
+              <h4 style={{ color: '#2196f3', margin: '12px 0 6px 0', fontSize: '13px' }}>Near Vision</h4>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Left Eye</label>
+                  <input value={formData.nearVisionLeft || ''} onChange={(e) => setFormData({...formData, nearVisionLeft: e.target.value})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '11px', fontFamily: 'Arial', outline: 'none' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Right Eye</label>
+                  <input value={formData.nearVisionRight || ''} onChange={(e) => setFormData({...formData, nearVisionRight: e.target.value})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '11px', fontFamily: 'Arial', outline: 'none' }} />
+                </div>
+              </div>
+              
+              <div style={{ paddingTop: '12px', textAlign: 'right' }}>
+                <button onClick={handleSaveDrawer} style={{ backgroundColor: '#2196f3', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: '600' }}>Save</button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Modal for Squint */}
+      {modalOpen && (
+        <>
+          <div onClick={() => setModalOpen(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '500px', maxHeight: '80vh', background: '#FFF', borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', zIndex: 1000, padding: '24px', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ margin: 0 }}>Squint</h3>
+              <button onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }}>×</button>
+            </div>
+            
+            <div>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#333' }}>Test for Squint Performed</label>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button 
+                    onClick={() => setFormData({...formData, squintPerformed: 'Yes'})} 
+                    style={{ 
+                      backgroundColor: formData.squintPerformed === 'Yes' ? '#2196f3' : '#f5f5f5',
+                      color: formData.squintPerformed === 'Yes' ? 'white' : '#333',
+                      border: '1px solid #ccc', 
+                      padding: '8px 16px', 
+                      borderRadius: '4px', 
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      fontWeight: '600'
+                    }}
+                  >
+                    Yes
+                  </button>
+                  <button 
+                    onClick={() => setFormData({...formData, squintPerformed: 'No'})} 
+                    style={{ 
+                      backgroundColor: formData.squintPerformed === 'No' ? '#2196f3' : '#f5f5f5',
+                      color: formData.squintPerformed === 'No' ? 'white' : '#333',
+                      border: '1px solid #ccc', 
+                      padding: '8px 16px', 
+                      borderRadius: '4px', 
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      fontWeight: '600'
+                    }}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '6px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Remarks</label>
+                <textarea value={formData.squintRemarks || ''} onChange={(e) => setFormData({...formData, squintRemarks: e.target.value})} style={{ width: '80%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '11px', minHeight: '60px', resize: 'vertical', fontFamily: 'Arial', outline: 'none' }} />
+              </div>
+            </div>
+            
+            <div style={{ paddingTop: '20px', textAlign: 'right' }}>
+              <button onClick={handleSaveModal} style={{ backgroundColor: '#2196f3', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>Save</button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

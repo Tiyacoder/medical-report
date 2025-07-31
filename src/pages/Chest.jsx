@@ -1,6 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const Heart = () => {
+// Redux Actions
+const updateChestData = (section, data) => ({ type: 'UPDATE_CHEST_DATA', payload: { section, data } });
+
+const Chest = () => {
+  // State management
+  const [globalState, setGlobalState] = useState({
+    chest: {
+      iloClassification: { profusion: '', grades: '', types: '' },
+      chestMeasurement: { inspiration: '120', expiration: '120' }
+    }
+  });
+
+  const useSelector = (selector) => selector(globalState);
+  const useDispatch = () => (action) => {
+    if (action.type === 'UPDATE_CHEST_DATA') {
+      setGlobalState(prev => ({
+        ...prev,
+        chest: { ...prev.chest, ...action.payload.data }
+      }));
+    }
+  };
+
+  const dispatch = useDispatch();
+  const chestData = useSelector(state => state.chest);
+  
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  const openDrawer = () => {
+    setFormData(chestData);
+    setDrawerOpen(true);
+  };
+
+  const handleSave = () => {
+    dispatch(updateChestData('all', formData));
+    setDrawerOpen(false);
+  };
+
   const containerStyle = {
     display: 'flex',
     gap: '20px',
@@ -35,7 +72,8 @@ const Heart = () => {
     borderRadius: '6px',
     border: '1px solid rgba(183, 200, 229, 0.50)',
     background: '#FFF',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    cursor: 'pointer'
   };
 
   const auscultationTitleStyle = {
@@ -112,7 +150,8 @@ const Heart = () => {
     borderRadius: '6px',
     border: '1px solid rgba(183, 200, 229, 0.50)',
     background: '#FFF',
-    padding: '16px'
+    padding: '16px',
+    cursor: 'pointer'
   };
 
   const chestTitleStyle = {
@@ -244,38 +283,38 @@ const Heart = () => {
   return (
     <div style={containerStyle}>
       <div style={leftColumnStyle}>
-        <div style={auscultationContainerStyle}>
+        <div onClick={openDrawer} style={auscultationContainerStyle}>
           <h3 style={auscultationTitleStyle}>ILO Classification of Chest Radiograph</h3>
           
           <div style={s1BoxStyle}>
             <h4 style={soundTitleStyle}>Profusion of Pneumoconiotic Opacities</h4>
-            <p style={{...soundTextStyle, color: '#818181'}}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.</p>
+            <p style={{...soundTextStyle, color: '#818181'}}>{chestData.iloClassification?.profusion || 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.'}</p>
           </div>
 
           <div style={s2BoxStyle}>
             <h4 style={{...soundTitleStyle, color: '#FFF'}}>Types</h4>
-            <p style={s2TextStyle}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.</p>
+            <p style={s2TextStyle}>{chestData.iloClassification?.types || 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.'}</p>
           </div>
 
           <div style={additionalSoundBoxStyle}>
             <h4 style={soundTitleStyle}>Grades</h4>
-            <p style={{...soundTextStyle, color: '#818181'}}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.</p>
+            <p style={{...soundTextStyle, color: '#818181'}}>{chestData.iloClassification?.grades || 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.'}</p>
           </div>
         </div>
       </div>
 
       <div style={rightColumnStyle}>
-        <div style={chestMeasurementStyle}>
+        <div onClick={openDrawer} style={chestMeasurementStyle}>
           <h3 style={chestTitleStyle}>Chest Measurement</h3>
           
           <div style={measurementItemStyle}>
             <p style={labelStyle}>After Full Inspiration (In CMS)</p>
-            <p style={valueStyle}>120</p>
+            <p style={valueStyle}>{chestData.chestMeasurement?.inspiration}</p>
           </div>
 
           <div style={measurementItemStyle}>
             <p style={labelStyle}>After Full Expiration (In CMS)</p>
-            <p style={valueStyle}>120</p>
+            <p style={valueStyle}>{chestData.chestMeasurement?.expiration}</p>
           </div>
         </div>
 
@@ -312,8 +351,56 @@ const Heart = () => {
           </div>
         </div>
       </div>
+
+      {/* Drawer */}
+      {drawerOpen && (
+        <>
+          <div onClick={() => setDrawerOpen(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.3)', zIndex: 999 }} />
+          <div style={{ position: 'fixed', top: 0, right: 0, width: '400px', height: '100vh', background: '#FFF', boxShadow: '-2px 0 10px rgba(0,0,0,0.1)', zIndex: 1000, padding: '20px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ margin: 0 }}>Chest</h3>
+              <button onClick={() => setDrawerOpen(false)} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }}>×</button>
+            </div>
+            
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '20px' }}>
+              <div style={{ color: '#09A2E3', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>ILO Classification of Chest Radiograph</div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Profusion of Pneumoconiotic Opacities</label>
+                <textarea value={formData.iloClassification?.profusion || ''} onChange={(e) => setFormData({...formData, iloClassification: {...formData.iloClassification, profusion: e.target.value}})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', minHeight: '50px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Grades</label>
+                <textarea value={formData.iloClassification?.grades || ''} onChange={(e) => setFormData({...formData, iloClassification: {...formData.iloClassification, grades: e.target.value}})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', minHeight: '50px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Types</label>
+                <textarea value={formData.iloClassification?.types || ''} onChange={(e) => setFormData({...formData, iloClassification: {...formData.iloClassification, types: e.target.value}})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', minHeight: '50px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div style={{ color: '#09A2E3', fontSize: '14px', fontWeight: '600', marginTop: '8px', marginBottom: '4px' }}>Chest Measurement</div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>After Full Inspiration (In CMS)</label>
+                <input value={formData.chestMeasurement?.inspiration || ''} onChange={(e) => setFormData({...formData, chestMeasurement: {...formData.chestMeasurement, inspiration: e.target.value}})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>After Full Expiration (In CMS)</label>
+                <input value={formData.chestMeasurement?.expiration || ''} onChange={(e) => setFormData({...formData, chestMeasurement: {...formData.chestMeasurement, expiration: e.target.value}})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div style={{ paddingTop: '16px', textAlign: 'right' }}>
+                <button onClick={handleSave} style={{ backgroundColor: '#09A2E3', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>Save</button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
-export default Heart;
+export default Chest;

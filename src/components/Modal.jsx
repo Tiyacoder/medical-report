@@ -1,12 +1,14 @@
 // src/components/Modal.jsx
 import React from 'react';
 
-const Modal = ({ isOpen, onClose, children }) => {
+const Modal = ({ isOpen, onClose, children, type = 'center' }) => {
   if (!isOpen) return null;
+
+  const isSidebar = type === 'sidebar';
 
   return (
     <div style={backdropStyle}>
-      <div style={modalStyle}>
+      <div style={isSidebar ? sidebarStyle : modalStyle}>
         <button onClick={onClose} style={closeButtonStyle}>
           &times;
         </button>
@@ -25,8 +27,8 @@ const backdropStyle = {
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
   zIndex: 1000,
   display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
+  justifyContent: 'flex-end',
+  alignItems: 'center',
 };
 
 const modalStyle = {
@@ -35,7 +37,21 @@ const modalStyle = {
   borderRadius: '12px',
   padding: '24px',
   boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
-  position: 'relative'
+  position: 'relative',
+  margin: 'auto',
+};
+
+const sidebarStyle = {
+  background: '#fff',
+  width: '400px',
+  height: '100%',
+  padding: '24px',
+  boxShadow: '-4px 0 10px rgba(0, 0, 0, 0.2)',
+  position: 'fixed',
+  top: 0,
+  right: 0,
+  borderTopLeftRadius: '12px',
+  borderBottomLeftRadius: '12px',
 };
 
 const closeButtonStyle = {
@@ -46,7 +62,7 @@ const closeButtonStyle = {
   border: 'none',
   background: 'transparent',
   cursor: 'pointer',
-  color: '#555'
+  color: '#555',
 };
 
 export default Modal;

@@ -1,6 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+// Redux Actions
+const updateAbdomenData = (section, data) => ({ type: 'UPDATE_ABDOMEN_DATA', payload: { section, data } });
 
 const Abdomen = () => {
+  // State management
+  const [globalState, setGlobalState] = useState({
+    abdomen: {
+      tenderness: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.',
+      spleen: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.',
+      liver: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.',
+      tumor: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.',
+      remarks: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis. Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis. Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.'
+    }
+  });
+
+  const useSelector = (selector) => selector(globalState);
+  const useDispatch = () => (action) => {
+    if (action.type === 'UPDATE_ABDOMEN_DATA') {
+      setGlobalState(prev => ({
+        ...prev,
+        abdomen: { ...prev.abdomen, ...action.payload.data }
+      }));
+    }
+  };
+
+  const dispatch = useDispatch();
+  const abdomenData = useSelector(state => state.abdomen);
+  
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  const openDrawer = () => {
+    setFormData({
+      tenderness: '',
+      spleen: '',
+      liver: '',
+      tumor: ''
+    });
+    setDrawerOpen(true);
+  };
+
+  const openModal = () => {
+    setFormData({ remarks: '' });
+    setModalOpen(true);
+  };
+
+  const handleSaveDrawer = () => {
+    dispatch(updateAbdomenData('details', formData));
+    setDrawerOpen(false);
+  };
+
+  const handleSaveModal = () => {
+    dispatch(updateAbdomenData('remarks', formData));
+    setModalOpen(false);
+  };
+
   const containerStyle = {
     display: 'flex',
     gap: '20px',
@@ -35,7 +91,8 @@ const Abdomen = () => {
     borderRadius: '6px',
     border: '1px solid rgba(183, 200, 229, 0.50)',
     background: '#FFF',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    cursor: 'pointer'
   };
 
   const abdomenTitleStyle = {
@@ -123,7 +180,8 @@ const Abdomen = () => {
     flexWrap: 'wrap',
     borderRadius: '6px',
     border: '1px solid rgba(183, 200, 229, 0.50)',
-    background: '#FFF'
+    background: '#FFF',
+    cursor: 'pointer'
   };
 
   const reportBoxStyle = {
@@ -247,33 +305,33 @@ const Abdomen = () => {
   return (
     <div style={containerStyle}>
       <div style={leftColumnStyle}>
-        <div style={abdomenContainerStyle}>
+        <div onClick={openDrawer} style={abdomenContainerStyle}>
           <h3 style={abdomenTitleStyle}>Abdomen Details</h3>
           
           <div style={tendernessBoxStyle}>
             <h4 style={conditionTitleStyle}>Tenderness</h4>
-            <p style={{...conditionTextStyle, color: '#818181'}}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.</p>
+            <p style={{...conditionTextStyle, color: '#818181'}}>{abdomenData.tenderness}</p>
           </div>
 
           <div style={spleenBoxStyle}>
             <h4 style={{...conditionTitleStyle, color: '#FFF'}}>Spleen</h4>
-            <p style={blueBoxTextStyle}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.</p>
+            <p style={blueBoxTextStyle}>{abdomenData.spleen}</p>
           </div>
 
           <div style={liverBoxStyle}>
             <h4 style={conditionTitleStyle}>Liver</h4>
-            <p style={{...conditionTextStyle, color: '#818181'}}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.</p>
+            <p style={{...conditionTextStyle, color: '#818181'}}>{abdomenData.liver}</p>
           </div>
 
           <div style={tumorBoxStyle}>
             <h4 style={{...conditionTitleStyle, color: '#FFF'}}>Tumor</h4>
-            <p style={blueBoxTextStyle}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.</p>
+            <p style={blueBoxTextStyle}>{abdomenData.tumor}</p>
           </div>
         </div>
       </div>
 
       <div style={rightColumnStyle}>
-        <div style={remarksBoxStyle}>
+        <div onClick={openModal} style={remarksBoxStyle}>
           <h3 style={remarksTitleStyle}>Remarks</h3>
           <div style={{
             height: '144px',
@@ -282,7 +340,7 @@ const Abdomen = () => {
             background: 'rgba(9, 162, 227, 0.10)',
             padding: '12px'
           }}>
-            <p style={remarksTextStyle}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis. Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis. Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.</p>
+            <p style={remarksTextStyle}>{abdomenData.remarks}</p>
           </div>
         </div>
 
@@ -319,6 +377,67 @@ const Abdomen = () => {
           </div>
         </div>
       </div>
+
+      {/* Drawer */}
+      {drawerOpen && (
+        <>
+          <div onClick={() => setDrawerOpen(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.3)', zIndex: 999 }} />
+          <div style={{ position: 'fixed', top: 0, right: 0, width: '400px', height: '100vh', background: '#FFF', boxShadow: '-2px 0 10px rgba(0,0,0,0.1)', zIndex: 1000, padding: '20px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ margin: 0 }}>Abdomen Details</h3>
+              <button onClick={() => setDrawerOpen(false)} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }}>×</button>
+            </div>
+            
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px', paddingBottom: '20px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#333' }}>Tenderness</label>
+                <textarea value={formData.tenderness || ''} onChange={(e) => setFormData({...formData, tenderness: e.target.value})} style={{ width: '100%', padding: '12px', border: '1px solid #E1E5E9', borderRadius: '6px', fontSize: '12px', minHeight: '60px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#333' }}>Spleen</label>
+                <textarea value={formData.spleen || ''} onChange={(e) => setFormData({...formData, spleen: e.target.value})} style={{ width: '100%', padding: '12px', border: '1px solid #E1E5E9', borderRadius: '6px', fontSize: '12px', minHeight: '60px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#333' }}>Liver</label>
+                <textarea value={formData.liver || ''} onChange={(e) => setFormData({...formData, liver: e.target.value})} style={{ width: '100%', padding: '12px', border: '1px solid #E1E5E9', borderRadius: '6px', fontSize: '12px', minHeight: '60px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#333' }}>Tumor</label>
+                <textarea value={formData.tumor || ''} onChange={(e) => setFormData({...formData, tumor: e.target.value})} style={{ width: '100%', padding: '12px', border: '1px solid #E1E5E9', borderRadius: '6px', fontSize: '12px', minHeight: '60px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div style={{ paddingTop: '16px', textAlign: 'right' }}>
+                <button onClick={handleSaveDrawer} style={{ backgroundColor: '#09A2E3', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>Save</button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Modal */}
+      {modalOpen && (
+        <>
+          <div onClick={() => setModalOpen(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '500px', maxHeight: '80vh', background: '#FFF', borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)', zIndex: 1000, padding: '24px', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ margin: 0 }}>Remarks</h3>
+              <button onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }}>×</button>
+            </div>
+            
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', fontSize: '14px', color: '#333' }}>Remarks</label>
+              <textarea value={formData.remarks || ''} onChange={(e) => setFormData({...formData, remarks: e.target.value})} style={{ width: '100%', padding: '12px', border: '1px solid #E1E5E9', borderRadius: '6px', fontSize: '12px', minHeight: '120px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+            </div>
+            
+            <div style={{ paddingTop: '20px', textAlign: 'right' }}>
+              <button onClick={handleSaveModal} style={{ backgroundColor: '#09A2E3', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>Save</button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

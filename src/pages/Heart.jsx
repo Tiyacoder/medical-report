@@ -1,6 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+// Redux Actions
+const updateHeartData = (section, data) => ({ type: 'UPDATE_HEART_DATA', payload: { section, data } });
 
 const Heart = () => {
+  // State management
+  const [globalState, setGlobalState] = useState({
+    heart: {
+      auscultation: {
+        s1: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.',
+        s2: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.',
+        additionalSound: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.'
+      },
+      ecgFindings: 'Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis. Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis. Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.'
+    }
+  });
+
+  const useSelector = (selector) => selector(globalState);
+  const useDispatch = () => (action) => {
+    if (action.type === 'UPDATE_HEART_DATA') {
+      setGlobalState(prev => ({
+        ...prev,
+        heart: { ...prev.heart, ...action.payload.data }
+      }));
+    }
+  };
+
+  const dispatch = useDispatch();
+  const heartData = useSelector(state => state.heart);
+  
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  const openDrawer = () => {
+    setFormData({
+      auscultation: { s1: '', s2: '', additionalSound: '' },
+      ecgFindings: ''
+    });
+    setDrawerOpen(true);
+  };
+
+  const handleSave = () => {
+    dispatch(updateHeartData('all', formData));
+    setDrawerOpen(false);
+  };
+
   const containerStyle = {
     display: 'flex',
     gap: '20px',
@@ -35,7 +79,8 @@ const Heart = () => {
     borderRadius: '6px',
     border: '1px solid rgba(183, 200, 229, 0.50)',
     background: '#FFF',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    cursor: 'pointer'
   };
 
   const auscultationTitleStyle = {
@@ -118,7 +163,8 @@ const Heart = () => {
     flexWrap: 'wrap',
     borderRadius: '6px',
     border: '1px solid rgba(183, 200, 229, 0.50)',
-    background: '#FFF'
+    background: '#FFF',
+    cursor: 'pointer'
   };
 
   const ecgReportBoxStyle = {
@@ -242,28 +288,28 @@ const Heart = () => {
   return (
     <div style={containerStyle}>
       <div style={leftColumnStyle}>
-        <div style={auscultationContainerStyle}>
+        <div onClick={openDrawer} style={auscultationContainerStyle}>
           <h3 style={auscultationTitleStyle}>Auscultation</h3>
           
           <div style={s1BoxStyle}>
             <h4 style={soundTitleStyle}>S1</h4>
-            <p style={{...soundTextStyle, color: '#818181'}}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.</p>
+            <p style={{...soundTextStyle, color: '#818181'}}>{heartData.auscultation?.s1}</p>
           </div>
 
           <div style={s2BoxStyle}>
             <h4 style={{...soundTitleStyle, color: '#FFF'}}>S2</h4>
-            <p style={s2TextStyle}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.</p>
+            <p style={s2TextStyle}>{heartData.auscultation?.s2}</p>
           </div>
 
           <div style={additionalSoundBoxStyle}>
             <h4 style={soundTitleStyle}>Additional Sound</h4>
-            <p style={{...soundTextStyle, color: '#818181'}}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisl quis.</p>
+            <p style={{...soundTextStyle, color: '#818181'}}>{heartData.auscultation?.additionalSound}</p>
           </div>
         </div>
       </div>
 
       <div style={rightColumnStyle}>
-        <div style={ecgFindingsBoxStyle}>
+        <div onClick={openDrawer} style={ecgFindingsBoxStyle}>
           <h3 style={ecgTitleStyle}>Electrocardiogram 12 Leads Findings</h3>
           <div style={{
             height: '144px',
@@ -272,7 +318,7 @@ const Heart = () => {
             background: 'rgba(9, 162, 227, 0.10)',
             padding: '12px'
           }}>
-            <p style={ecgTextStyle}>Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis. Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis. Lorem ipsum dolor sit amet amet amet met amet consectetur. lorem proin enim pretium nisi quis.</p>
+            <p style={ecgTextStyle}>{heartData.ecgFindings}</p>
           </div>
         </div>
 
@@ -309,6 +355,47 @@ const Heart = () => {
           </div>
         </div>
       </div>
+
+      {/* Drawer */}
+      {drawerOpen && (
+        <>
+          <div onClick={() => setDrawerOpen(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.3)', zIndex: 999 }} />
+          <div style={{ position: 'fixed', top: 0, right: 0, width: '400px', height: '100vh', background: '#FFF', boxShadow: '-2px 0 10px rgba(0,0,0,0.1)', zIndex: 1000, padding: '20px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ margin: 0 }}>Cardiological</h3>
+              <button onClick={() => setDrawerOpen(false)} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer' }}>×</button>
+            </div>
+            
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '20px' }}>
+              <div style={{ color: '#09A2E3', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Auscultation</div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>S1</label>
+                <textarea value={formData.auscultation?.s1 || ''} onChange={(e) => setFormData({...formData, auscultation: {...formData.auscultation, s1: e.target.value}})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', minHeight: '50px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>S2</label>
+                <textarea value={formData.auscultation?.s2 || ''} onChange={(e) => setFormData({...formData, auscultation: {...formData.auscultation, s2: e.target.value}})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', minHeight: '50px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Additional Sounds</label>
+                <textarea value={formData.auscultation?.additionalSound || ''} onChange={(e) => setFormData({...formData, auscultation: {...formData.auscultation, additionalSound: e.target.value}})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', minHeight: '50px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '4px', fontWeight: '600', fontSize: '12px', color: '#333' }}>Electrocardiogram 12 Leads Findings</label>
+                <textarea value={formData.ecgFindings || ''} onChange={(e) => setFormData({...formData, ecgFindings: e.target.value})} style={{ width: '100%', padding: '8px', border: '1px solid #E1E5E9', borderRadius: '4px', fontSize: '12px', minHeight: '80px', resize: 'vertical', fontFamily: 'Roboto', outline: 'none' }} />
+              </div>
+              
+              <div style={{ paddingTop: '16px', textAlign: 'right' }}>
+                <button onClick={handleSave} style={{ backgroundColor: '#09A2E3', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>Save</button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
